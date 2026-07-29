@@ -1,6 +1,6 @@
 # SafeSpace
 
-Un lugar para no cargar sola lo que sientes. Aplicación web de apoyo emocional entre pares para personas jóvenes en México, con círculos de escucha en horario fijo, un path diario de tareas pequeñas con guías, un árbol personal que crece con la constancia bajo un paisaje que refleja el ánimo del día, una afirmación que cambia cada hora, un panel de lecturas y un botón de emergencia siempre visible.
+Un lugar para no cargar sola lo que sientes. Aplicación web de apoyo emocional entre pares para personas jóvenes en México, con círculos de escucha en horario fijo, un path diario de tareas pequeñas con guías, un árbol personal que crece con la constancia bajo un paisaje que refleja el ánimo del día, una afirmación que cambia cada hora, un panel de lecturas con guías de meditación y un botón de emergencia siempre visible.
 
 Proyecto final del curso, segunda parte. La primera parte es el documento de definición y planeación que vive en `docs/`.
 

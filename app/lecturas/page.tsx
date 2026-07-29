@@ -24,7 +24,7 @@ export default async function Lecturas() {
   const objs = new Set((objetivos ?? []).map((o) => o.objetivo));
   const estado = new Map((marcadas ?? []).map((m) => [m.lectura_id, m]));
   const afinidad = (tema: string) =>
-    objs.has(tema) || tema === "basicos" || (tema === "conexion" && objs.has("relaciones")) ? 1 : 0;
+    objs.has(tema) || tema === "basicos" || tema === "meditacion" || (tema === "conexion" && objs.has("relaciones")) ? 1 : 0;
 
   const orden = (lecturas ?? [])
     .map((l) => ({ ...l, ...estado.get(l.id), afin: afinidad(l.tema) }))

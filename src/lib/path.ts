@@ -12,6 +12,7 @@ export interface Tarea {
   categoria: string;
   dificultad: number;
   minutos: number;
+  guia?: string | null;
 }
 
 export interface PerfilPath {

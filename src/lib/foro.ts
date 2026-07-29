@@ -19,13 +19,13 @@ export interface EstadoForo {
 }
 
 const TEMAS_DIA = [
-  "Que te ayudo esta semana, aunque fuera pequeno",
+  "Qué te ayudó esta semana, aunque fuera pequeño",
   "Lo que me cuesta decir en voz alta",
   "Un miedo que quiero soltar",
-  "Como se ve un buen dia para mi",
-  "Lo que aprendi de un mal momento",
-  "Sesion libre, comparte lo que traes hoy",
-  "Algo que quiero agradecerme a mi",
+  "Cómo se ve un buen día para mí",
+  "Lo que aprendí de un mal momento",
+  "Sesión libre, comparte lo que traes hoy",
+  "Algo que quiero agradecerme a mí",
 ];
 
 /** Hora local del centro de Mexico para un instante dado. Usa la base IANA, no desplazamientos fijos. */

@@ -30,6 +30,9 @@ export default function Cuestionario() {
   const paginaCompleta = actuales.every((p) =>
     p.tipo === "multi" ? ((r[p.n] as string[]) ?? []).length > 0 : r[p.n] != null
   );
+  // El seudonimo es requisito desde la primera pantalla. En las pruebas con
+  // usuarias reales todo el mundo se lo saltaba y quedaba bloqueado al final.
+  const puedeAvanzar = pagina === 0 ? paginaCompleta && seudonimo.trim().length >= 2 : paginaCompleta;
   const listaParaEnviar = paginaCompleta && seudonimo.trim().length >= 2;
 
   const enviar = async () => {
@@ -48,9 +51,9 @@ export default function Cuestionario() {
       <main className="flex min-h-dvh flex-col justify-center gap-4 px-6">
         <h1 className="font-serif text-2xl leading-snug">Gracias por responder con honestidad</h1>
         <p className="text-sm leading-relaxed text-mist">
-          Por lo que contaste, parece que estas cargando mucho en este momento. SafeSpace va a acompanarte
-          con pasos muy pequenos, y tambien queremos recordarte que hablar con un profesional puede ayudarte
-          mas de lo que imaginas. El boton SOS esta siempre visible.
+          Por lo que contaste, parece que estás cargando mucho en este momento. SafeSpace va a acompañarte
+          con pasos muy pequeños, y también queremos recordarte que hablar con un profesional puede ayudarte
+          más de lo que imaginas. El botón SOS está siempre visible.
         </p>
         <button onClick={() => { router.push("/hoy"); router.refresh(); }} className="rounded-xl bg-lamp py-3.5 font-bold text-night">
           Continuar a mi espacio
@@ -70,13 +73,16 @@ export default function Cuestionario() {
       </div>
 
       {pagina === 0 && (
-        <label className="mb-6 block">
-          <span className="mb-2 block text-sm text-faint">Elige tu seudonimo, asi te veran en el circulo</span>
+        <label className="mb-6 block rounded-2xl border border-lamp/50 bg-lamp/10 p-4">
+          <span className="block font-serif text-lg text-linen">Primero, elige tu seudónimo</span>
+          <span className="mt-1 block text-xs leading-relaxed text-mist">
+            Así te verán en el círculo, tu nombre real nunca aparece. Este paso es necesario para continuar.
+          </span>
           <input
             value={seudonimo}
             onChange={(e) => setSeudonimo(e.target.value.slice(0, 18))}
             placeholder="Por ejemplo, Luna"
-            className="w-full rounded-xl border border-white/10 bg-dusk px-4 py-3 text-linen outline-none focus:border-lamp"
+            className="mt-3 w-full rounded-xl border border-white/15 bg-night px-4 py-3.5 text-linen outline-none focus:border-lamp"
           />
         </label>
       )}
@@ -128,15 +134,25 @@ export default function Cuestionario() {
       </div>
 
       {error && <p className="mt-4 text-sm text-rose">{error}</p>}
+      {pagina === 2 && paginaCompleta && seudonimo.trim().length < 2 && (
+        <p className="mt-4 text-sm text-lamp">Te falta elegir tu seudónimo, está en la primera pantalla.</p>
+      )}
+      {/* Hallazgo de prueba en produccion, el boton final se apagaba sin explicar por que.
+          Este aviso le dice a la usuaria exactamente que falta. */}
+      {pagina === 2 && paginaCompleta && seudonimo.trim().length < 2 && (
+        <p className="mt-4 text-sm text-lamp">
+          Solo falta una cosa, regresa a la primera pantalla y elige tu seudonimo para poder crear tu path.
+        </p>
+      )}
       <div className="mt-8 flex gap-3">
         {pagina > 0 && (
           <button onClick={() => setPagina(pagina - 1)} className="rounded-xl border border-white/10 px-5 py-3.5 text-mist">
-            Atras
+            Atrás
           </button>
         )}
         <button
           onClick={() => (pagina < 2 ? setPagina(pagina + 1) : enviar())}
-          disabled={(pagina < 2 && !paginaCompleta) || (pagina === 2 && (!listaParaEnviar || guardando))}
+          disabled={(pagina < 2 && !puedeAvanzar) || (pagina === 2 && (!listaParaEnviar || guardando))}
           className="flex-1 rounded-xl bg-lamp py-3.5 font-bold text-night disabled:opacity-40"
         >
           {guardando ? "Creando tu path..." : pagina < 2 ? "Siguiente" : "Crear mi path"}

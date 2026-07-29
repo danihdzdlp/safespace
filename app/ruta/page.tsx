@@ -5,6 +5,8 @@ import { fechaOficial } from "@/lib/foro";
 import Nav from "@/components/Nav";
 import Encabezado from "@/components/Encabezado";
 import AnimoDelDia from "./AnimoDelDia";
+import Arbol from "@/components/Arbol";
+import { etapaDelArbol } from "@/lib/arbol";
 
 export const dynamic = "force-dynamic";
 
@@ -17,14 +19,16 @@ export default async function Ruta() {
 
   const hoy = fechaOficial();
   const hace7 = fechaOficial(new Date(Date.now() - 6 * 86400000));
-  const [{ data: asignaciones }, { data: animoHoy }] = await Promise.all([
+  const [{ data: asignaciones }, { data: animoHoy }, { count: totalCompletadas }] = await Promise.all([
     supabase
       .from("asignaciones")
       .select("fecha, asignacion_tareas(completada)")
       .eq("usuaria_id", user.id)
       .gte("fecha", hace7),
     supabase.from("animo_diario").select("valor").eq("usuaria_id", user.id).eq("fecha", hoy).maybeSingle(),
+    supabase.from("asignacion_tareas").select("id", { count: "exact", head: true }).eq("completada", true),
   ]);
+  const arbol = etapaDelArbol(totalCompletadas ?? 0);
 
   const porFecha = new Map<string, { total: number; hechas: number }>();
   for (const a of asignaciones ?? []) {
@@ -45,6 +49,29 @@ export default async function Ruta() {
       <Encabezado seudonimo={perfil.seudonimo} racha={perfil.racha} />
       <section className="space-y-4 px-5 pt-2">
         <h1 className="font-serif text-2xl">Mi ruta</h1>
+
+        <div className="rounded-2xl border border-white/10 bg-dusk p-4">
+          <p className="mb-2 text-xs tracking-wide text-faint">TU ÁRBOL</p>
+          <div className="flex items-center gap-4">
+            <Arbol etapa={arbol.etapa} animo={animoHoy?.valor ?? null} />
+            <div>
+              <p className="font-serif text-lg">{arbol.nombre}</p>
+              {arbol.etapa === 0 ? (
+                <p className="mt-1 text-sm italic leading-relaxed text-mist">
+                  No tienes que florecer hoy. Solo quédate aquí. Nosotros cuidaremos este espacio contigo.
+                </p>
+              ) : (
+                <p className="mt-1 text-sm leading-relaxed text-mist">
+                  {arbol.completadas} pasos completados.
+                  {arbol.siguiente
+                    ? ` A ${arbol.faltan} de convertirse en ${arbol.siguiente.toLowerCase()}.`
+                    : " Tu constancia lo hizo crecer completo."}
+                </p>
+              )}
+            </div>
+          </div>
+          <p className="mt-2 text-xs text-faint">El paisaje refleja el ánimo que registras abajo, del día lluvioso al sol pleno.</p>
+        </div>
 
         <div className="rounded-2xl border border-white/10 bg-dusk p-4">
           <p className="mb-3 text-xs tracking-wide text-faint">TU SEMANA</p>
@@ -73,13 +100,17 @@ export default async function Ruta() {
         <AnimoDelDia inicial={animoHoy?.valor ?? null} base={perfil.animo_base ?? 3} />
 
         <div className="rounded-2xl border border-white/10 bg-dusk p-4">
-          <p className="mb-2 text-xs tracking-wide text-faint">PROXIMAS ETAPAS</p>
+          <p className="mb-2 text-xs tracking-wide text-faint">PRÓXIMAS ETAPAS</p>
           <ul className="space-y-2 text-sm text-mist">
-            <li><span className="font-bold text-lamp">Manana.</span> Tu path se adapta a lo que completes hoy.</li>
-            <li><span className="font-bold text-lamp">Dia 7.</span> Primera revision de ritmo, tu constancia decide si sube el nivel.</li>
-            <li><span className="font-bold text-lamp">Dia 30.</span> Retomamos tu meta del cuestionario.</li>
+            <li><span className="font-bold text-lamp">Mañana.</span> Tu path se adapta a lo que completes hoy.</li>
+            <li><span className="font-bold text-lamp">Día 7.</span> Primera revisión de ritmo, tu constancia decide si sube el nivel.</li>
+            <li><span className="font-bold text-lamp">Día 30.</span> Retomamos tu meta del cuestionario.</li>
           </ul>
         </div>
+
+        <a href="/salir" className="block pt-2 pb-1 text-center text-sm text-faint underline">
+          Cerrar sesión
+        </a>
       </section>
       <Nav />
     </main>

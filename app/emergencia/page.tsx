@@ -21,7 +21,7 @@ export default function Emergencia() {
         Mientras decides, respira lento siguiendo el punto de arriba.
       </p>
       <a href="tel:8009112000" className="rounded-2xl bg-rose py-4 text-center text-base font-extrabold text-night">
-        Llamar a la Linea de la Vida
+        Llamar a la Línea de la Vida
       </a>
       <p className="text-center text-lg font-bold tracking-wide text-linen">800 911 2000</p>
       <a href="tel:911" className="rounded-2xl border border-white/15 bg-dusk py-4 text-center text-base font-bold text-linen">
@@ -31,7 +31,7 @@ export default function Emergencia() {
         Volver a mi espacio
       </Link>
       <p className="pt-6 text-center text-[11px] leading-relaxed text-faint">
-        SafeSpace no sustituye la atencion de un profesional de la salud mental.
+        SafeSpace no sustituye la atención de un profesional de la salud mental.
       </p>
     </main>
   );

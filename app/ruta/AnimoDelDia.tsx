@@ -21,7 +21,7 @@ export default function AnimoDelDia({ inicial, base }: { inicial: number | null;
 
   return (
     <div className="rounded-2xl border border-white/10 bg-dusk p-4">
-      <p className="mb-3 text-xs tracking-wide text-faint">COMO TE SIENTES HOY, DEL 1 AL 5</p>
+      <p className="mb-3 text-xs tracking-wide text-faint">CÓMO TE SIENTES HOY, DEL 1 AL 5</p>
       <div className="flex gap-2">
         {CARAS.map((c, i) => (
           <button
@@ -34,7 +34,7 @@ export default function AnimoDelDia({ inicial, base }: { inicial: number | null;
           </button>
         ))}
       </div>
-      {valor && <p className="mt-2 text-xs text-faint">Registrado. Tu punto de partida fue {base} de 5, cada registro dibuja tu evolucion.</p>}
+      {valor && <p className="mt-2 text-xs text-faint">Registrado. Tu punto de partida fue {base} de 5, cada registro dibuja tu evolución.</p>}
       {error && <p className="mt-2 text-sm text-rose">{error}</p>}
     </div>
   );

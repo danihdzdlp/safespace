@@ -6,15 +6,17 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        night: "#1F1930",
-        dusk: "#2A2342",
-        veil: "#372C55",
-        lamp: "#F5B971",
-        sage: "#9BC4A8",
-        rose: "#E8788A",
-        linen: "#F3EEE7",
-        mist: "#ADA3C9",
-        faint: "#786F99",
+        // Azul pizarra sereno, pensado para leer de noche sin fatiga,
+        // acentos con poca saturacion y texto marfil en lugar de blanco puro.
+        night: "#12202F",
+        dusk: "#1A2B3D",
+        veil: "#25394F",
+        lamp: "#8FB8DD",
+        sage: "#8AC6B1",
+        rose: "#E58296",
+        linen: "#E9EEF3",
+        mist: "#AFBFCE",
+        faint: "#77879B",
       },
     },
   },

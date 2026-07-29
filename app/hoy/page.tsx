@@ -5,6 +5,7 @@ import Link from "next/link";
 import { supabaseServer } from "@/lib/supabase/server";
 import { fechaOficial, estadoDelForo, formatoRestante } from "@/lib/foro";
 import { generarPathDelDia } from "@/app/acciones";
+import { fraseDeLaHora } from "@/lib/frases";
 import Nav from "@/components/Nav";
 import Encabezado from "@/components/Encabezado";
 import ListaTareas, { type TareaDelDia } from "./ListaTareas";
@@ -25,7 +26,7 @@ export default async function Hoy() {
   const hoy = fechaOficial();
   const { data: asignacion } = await supabase
     .from("asignaciones")
-    .select("id, asignacion_tareas(id, completada, catalogo_tareas(titulo, categoria, minutos))")
+    .select("id, asignacion_tareas(id, completada, catalogo_tareas(titulo, categoria, minutos, guia))")
     .eq("usuaria_id", user.id)
     .eq("fecha", hoy)
     .maybeSingle();
@@ -37,29 +38,49 @@ export default async function Hoy() {
       titulo: f.catalogo_tareas?.titulo ?? "",
       categoria: f.catalogo_tareas?.categoria ?? "",
       minutos: f.catalogo_tareas?.minutos ?? 0,
+      guia: f.catalogo_tareas?.guia ?? null,
     }))
     .sort((a, b) => a.id - b.id);
 
   const foro = estadoDelForo();
+  const frase = fraseDeLaHora();
+
+  // Total historico de tareas completadas, con el se sabe si la semilla es nueva
+  const { count: totalCompletadas } = await supabase
+    .from("asignacion_tareas")
+    .select("id", { count: "exact", head: true })
+    .eq("completada", true);
 
   return (
     <main>
       <Encabezado seudonimo={perfil.seudonimo} racha={perfil.racha} />
       <section className="space-y-4 px-5 pt-2">
+        <p className="rounded-2xl border border-white/10 bg-dusk px-4 py-3 text-center font-serif text-[15px] italic leading-relaxed text-mist">
+          {frase}
+        </p>
+        {(totalCompletadas ?? 0) === 0 && (
+          <div className="rounded-2xl border border-lamp/40 bg-lamp/10 p-4">
+            <p className="text-sm font-bold text-lamp">Recibiste una semilla</p>
+            <p className="mt-1 text-sm leading-relaxed text-mist">
+              No tienes que florecer hoy. Solo quédate aquí. Nosotros cuidaremos este espacio contigo.
+              Tu árbol crece con cada paso, míralo en Mi ruta.
+            </p>
+          </div>
+        )}
         <h1 className="font-serif text-2xl">Tu path de hoy</h1>
         <ListaTareas tareas={tareas} />
         <Link
           href="/circulo"
           className={`block rounded-2xl border p-4 ${foro.abierto ? "border-lamp/50 bg-lamp/10" : "border-white/10 bg-dusk"}`}
         >
-          <p className="text-sm font-bold">{foro.abierto ? "El circulo esta encendido" : "El circulo abre a las 8:00 pm"}</p>
+          <p className="text-sm font-bold">{foro.abierto ? "El círculo está encendido" : "El círculo abre a las 8:00 pm"}</p>
           <p className="text-xs text-faint">
-            {foro.abierto ? `Cierra en ${formatoRestante(foro.restanteSeg)}` : `Todos los dias de 8:00 a 9:30 pm`}
+            {foro.abierto ? `Cierra en ${formatoRestante(foro.restanteSeg)}` : `Todos los días de 8:00 a 9:30 pm`}
           </p>
         </Link>
         <Link href="/lecturas" className="block rounded-2xl border border-white/10 bg-dusk p-4">
           <p className="text-sm font-bold">Una lectura para ti</p>
-          <p className="text-xs text-faint">Textos de 3 a 5 minutos elegidos segun tu perfil</p>
+          <p className="text-xs text-faint">Textos de 3 a 5 minutos elegidos según tu perfil</p>
         </Link>
       </section>
       <Nav />

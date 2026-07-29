@@ -29,12 +29,12 @@ const esquemaRespuestas = z.record(
 
 export async function guardarCuestionario(seudonimo: string, respuestas: Respuestas): Promise<Resultado<{ mostrarApoyo: boolean }>> {
   const { supabase, user } = await usuariaActual();
-  if (!user) return { ok: false, error: "Tu sesion expiro, vuelve a entrar." };
+  if (!user) return { ok: false, error: "Tu sesión expiró, vuelve a entrar." };
 
   const nombre = seudonimo.trim();
-  if (nombre.length < 2 || nombre.length > 18) return { ok: false, error: "El seudonimo debe tener entre 2 y 18 caracteres." };
+  if (nombre.length < 2 || nombre.length > 18) return { ok: false, error: "El seudónimo debe tener entre 2 y 18 caracteres." };
   const parseo = esquemaRespuestas.safeParse(respuestas);
-  if (!parseo.success) return { ok: false, error: "Hay respuestas con un formato invalido." };
+  if (!parseo.success) return { ok: false, error: "Hay respuestas con un formato inválido." };
   const faltantes = PREGUNTAS.filter((p) => respuestas[p.n] == null || (Array.isArray(respuestas[p.n]) && (respuestas[p.n] as string[]).length === 0));
   if (faltantes.length > 0) return { ok: false, error: `Falta responder la pregunta ${faltantes[0].n}.` };
 
@@ -68,7 +68,7 @@ export async function guardarCuestionario(seudonimo: string, respuestas: Respues
 // ---------- Path del dia ----------
 export async function generarPathDelDia(): Promise<Resultado> {
   const { supabase, user } = await usuariaActual();
-  if (!user) return { ok: false, error: "Sin sesion." };
+  if (!user) return { ok: false, error: "Sin sesión." };
   const hoy = fechaOficial();
 
   // Idempotencia por restriccion UNIQUE, si ya existe no se genera de nuevo
@@ -125,7 +125,7 @@ export async function generarPathDelDia(): Promise<Resultado> {
 
 export async function marcarTarea(asignacionTareaId: number, completada: boolean): Promise<Resultado<{ racha: number }>> {
   const { supabase, user } = await usuariaActual();
-  if (!user) return { ok: false, error: "Sin sesion." };
+  if (!user) return { ok: false, error: "Sin sesión." };
 
   const { error } = await supabase
     .from("asignacion_tareas")
@@ -157,24 +157,24 @@ export async function marcarTarea(asignacionTareaId: number, completada: boolean
 
 export async function registrarAnimo(valor: number): Promise<Resultado> {
   const { supabase, user } = await usuariaActual();
-  if (!user) return { ok: false, error: "Sin sesion." };
+  if (!user) return { ok: false, error: "Sin sesión." };
   const v = z.number().int().min(1).max(5).safeParse(valor);
-  if (!v.success) return { ok: false, error: "Valor invalido." };
+  if (!v.success) return { ok: false, error: "Valor inválido." };
   await supabase.from("animo_diario").upsert({ usuaria_id: user.id, fecha: fechaOficial(), valor });
   revalidatePath("/ruta");
   return { ok: true };
 }
 
 // ---------- Foro ----------
-const esquemaTexto = z.string().trim().min(1, "Escribe algo antes de compartir.").max(2000, "Maximo 2000 caracteres.");
+const esquemaTexto = z.string().trim().min(1, "Escribe algo antes de compartir.").max(2000, "Máximo 2000 caracteres.");
 
 export async function publicarMensaje(salaId: string, texto: string): Promise<Resultado<{ riesgo: boolean }>> {
   const { supabase, user } = await usuariaActual();
-  if (!user) return { ok: false, error: "Sin sesion." };
+  if (!user) return { ok: false, error: "Sin sesión." };
 
   // Validacion 1, ventana horaria, siempre en el servidor
   const estado = estadoDelForo();
-  if (!estado.abierto) return { ok: false, error: "El circulo esta cerrado. Tu texto se conserva como borrador para la proxima sesion." };
+  if (!estado.abierto) return { ok: false, error: "El círculo está cerrado. Tu texto se conserva como borrador para la próxima sesión." };
 
   // Validacion 2, integridad del contenido
   const parseo = esquemaTexto.safeParse(texto);
@@ -187,7 +187,7 @@ export async function publicarMensaje(salaId: string, texto: string): Promise<Re
     .select("id", { count: "exact", head: true })
     .eq("usuaria_id", user.id)
     .gte("creada_en", hace60s);
-  if ((count ?? 0) >= 5) return { ok: false, error: "Vas muy rapido. Espera un momento antes de publicar de nuevo." };
+  if ((count ?? 0) >= 5) return { ok: false, error: "Vas muy rápido. Espera un momento antes de publicar de nuevo." };
 
   // Validacion 4, riesgo. Nunca bloquea, marca y acompana
   const riesgo = evaluarRiesgo(parseo.data);
@@ -206,9 +206,9 @@ export async function publicarMensaje(salaId: string, texto: string): Promise<Re
 
 export async function responderMensaje(publicacionId: number, texto: string): Promise<Resultado> {
   const { supabase, user } = await usuariaActual();
-  if (!user) return { ok: false, error: "Sin sesion." };
+  if (!user) return { ok: false, error: "Sin sesión." };
   const estado = estadoDelForo();
-  if (!estado.abierto) return { ok: false, error: "El circulo esta cerrado, vuelve en la proxima sesion." };
+  if (!estado.abierto) return { ok: false, error: "El círculo está cerrado, vuelve en la próxima sesión." };
   const parseo = z.string().trim().min(1).max(500).safeParse(texto);
   if (!parseo.success) return { ok: false, error: "La respuesta debe tener entre 1 y 500 caracteres." };
   const { data: perfil } = await supabase.from("perfiles").select("seudonimo").eq("id", user.id).single();
@@ -232,7 +232,7 @@ export interface PublicacionConRespuestas {
 
 export async function listarPublicaciones(salaId: string): Promise<Resultado<PublicacionConRespuestas[]>> {
   const { supabase, user } = await usuariaActual();
-  if (!user) return { ok: false, error: "Sin sesion." };
+  if (!user) return { ok: false, error: "Sin sesión." };
   const { data, error } = await supabase
     .from("publicaciones")
     .select("id, seudonimo, texto, nivel_riesgo, creada_en, respuestas(id, seudonimo, texto)")
@@ -246,7 +246,7 @@ export async function listarPublicaciones(salaId: string): Promise<Resultado<Pub
 // ---------- Lecturas ----------
 export async function marcarLectura(lecturaId: number, campo: "leida" | "guardada", valor: boolean): Promise<Resultado> {
   const { supabase, user } = await usuariaActual();
-  if (!user) return { ok: false, error: "Sin sesion." };
+  if (!user) return { ok: false, error: "Sin sesión." };
   const { data: actual } = await supabase.from("lecturas_usuaria").select("leida, guardada").eq("usuaria_id", user.id).eq("lectura_id", lecturaId).maybeSingle();
   await supabase.from("lecturas_usuaria").upsert({
     usuaria_id: user.id,

@@ -25,7 +25,7 @@ export default async function PaginaCirculo() {
     <main>
       <Encabezado seudonimo={perfil.seudonimo} racha={perfil.racha} />
       <section className="px-5 pt-2">
-        <h1 className="mb-4 font-serif text-2xl">El circulo</h1>
+        <h1 className="mb-4 font-serif text-2xl">El círculo</h1>
         <Circulo
           salas={salas ?? []}
           estadoInicial={{ abierto: estado.abierto, restanteSeg: estado.restanteSeg, temaDelDia: estado.temaDelDia }}

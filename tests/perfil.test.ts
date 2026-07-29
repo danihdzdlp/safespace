@@ -11,11 +11,11 @@ describe("construirPerfil", () => {
     expect(p.objetivos).toContain("descanso");
   });
   it("nadie inicia arriba de nivel 3 y las senales suman", () => {
-    const p = construirPerfil({ 5: 5, 9: "Mas de 30 minutos", 11: "Si y me funciono" });
+    const p = construirPerfil({ 5: 5, 9: "Más de 30 minutos", 11: "Sí y me funcionó" });
     expect(p.nivelDificultad).toBe(3);
   });
   it("la sobrecarga alta manda sobre todo lo demas", () => {
-    const p = construirPerfil({ 5: 5, 9: "Mas de 30 minutos", 11: "Si y me funciono", 14: 5 });
+    const p = construirPerfil({ 5: 5, 9: "Más de 30 minutos", 11: "Sí y me funcionó", 14: 5 });
     expect(p.nivelDificultad).toBe(1);
   });
   it("activa la pantalla de apoyo con animo bajo y sobrecarga alta", () => {

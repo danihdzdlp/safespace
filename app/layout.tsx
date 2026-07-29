@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "SafeSpace",
   description: "Un lugar para no cargar sola lo que sientes. Apoyo emocional entre pares.",
 };
-export const viewport: Viewport = { themeColor: "#1F1930" };
+export const viewport: Viewport = { themeColor: "#12202F" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

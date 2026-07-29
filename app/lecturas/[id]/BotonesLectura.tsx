@@ -22,7 +22,7 @@ export default function BotonesLectura({ lecturaId, leida: l0, guardada: g0 }: {
         disabled={pendiente}
         className={`flex-1 rounded-xl py-3.5 font-bold ${leida ? "border border-sage/50 bg-sage/10 text-sage" : "bg-lamp text-night"}`}
       >
-        {leida ? "Marcada como leida" : "Marcar como leida"}
+        {leida ? "Marcada como leída" : "Marcar como leída"}
       </button>
       <button
         onClick={() => marcar("guardada", !guardada)}

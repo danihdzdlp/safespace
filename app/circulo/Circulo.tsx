@@ -69,12 +69,12 @@ export default function Circulo({ salas, estadoInicial }: { salas: { id: string;
   return (
     <div className="space-y-4">
       <div className={`rounded-2xl border p-4 ${estado.abierto ? "border-lamp/50 bg-lamp/10" : "border-white/10 bg-dusk"}`}>
-        <p className="text-sm font-bold">{estado.abierto ? "Sesion en curso" : "Sesion cerrada"}</p>
+        <p className="text-sm font-bold">{estado.abierto ? "Sesión en curso" : "Sesión cerrada"}</p>
         <p className="text-xs text-faint">
-          {estado.abierto ? `Cierra en ${formatoRestante(estado.restanteSeg)}` : `Abre en ${formatoRestante(estado.restanteSeg)}, todos los dias de 8:00 a 9:30 pm`}
+          {estado.abierto ? `Cierra en ${formatoRestante(estado.restanteSeg)}` : `Abre en ${formatoRestante(estado.restanteSeg)}, todos los días de 8:00 a 9:30 pm`}
         </p>
         <div className="mt-3 rounded-xl bg-night p-3">
-          <p className="text-[10px] tracking-wide text-faint">TEMA DE HOY, PROPUESTO POR MODERACION</p>
+          <p className="text-[10px] tracking-wide text-faint">TEMA DE HOY, PROPUESTO POR MODERACIÓN</p>
           <p className="font-serif">{estado.temaDelDia}</p>
         </div>
       </div>
@@ -97,7 +97,7 @@ export default function Circulo({ salas, estadoInicial }: { salas: { id: string;
             value={texto}
             onChange={(e) => setTexto(e.target.value.slice(0, 2000))}
             rows={3}
-            placeholder="Comparte lo que traes hoy. Las demas personas escuchan primero, aconsejan solo si lo pides."
+            placeholder="Comparte lo que traes hoy. Las demás personas escuchan primero, aconsejan solo si lo pides."
             className="w-full resize-none bg-transparent text-sm text-linen outline-none placeholder:text-faint"
           />
           <div className="mt-2 flex items-center justify-between">
@@ -113,16 +113,16 @@ export default function Circulo({ salas, estadoInicial }: { salas: { id: string;
         </div>
       ) : (
         <p className="rounded-2xl border border-white/10 bg-dusk p-4 text-sm leading-relaxed text-mist">
-          Fuera de horario el circulo queda en modo lectura, como un cuaderno abierto de la comunidad.
+          Fuera de horario el círculo queda en modo lectura, como un cuaderno abierto de la comunidad.
         </p>
       )}
 
       {avisoApoyo && (
         <div className="rounded-2xl border border-rose/40 bg-rose/10 p-4">
-          <p className="text-sm font-bold">Gracias por confiar esto aqui</p>
+          <p className="text-sm font-bold">Gracias por confiar esto aquí</p>
           <p className="mt-1 text-sm leading-relaxed text-mist">
-            Lo que compartiste suena a que estas pasando por algo muy pesado. Tu publicacion sigue visible y una
-            persona moderadora la vera con prioridad. Si lo que sientes se vuelve demasiado, el boton SOS conecta
+            Lo que compartiste suena a que estás pasando por algo muy pesado. Tu publicación sigue visible y una
+            persona moderadora la verá con prioridad. Si lo que sientes se vuelve demasiado, el botón SOS conecta
             con alguien disponible ahora mismo.
           </p>
           <button onClick={() => setAvisoApoyo(false)} className="mt-2 text-sm text-faint underline">
@@ -134,9 +134,9 @@ export default function Circulo({ salas, estadoInicial }: { salas: { id: string;
       {error && <p className="text-sm text-rose">{error}</p>}
 
       {posts === null ? (
-        <p className="py-6 text-center text-sm text-faint">Cargando el circulo...</p>
+        <p className="py-6 text-center text-sm text-faint">Cargando el círculo...</p>
       ) : posts.length === 0 ? (
-        <p className="py-6 text-center text-sm text-faint">Aun no hay compartires en esta sala. El primero puede ser el tuyo.</p>
+        <p className="py-6 text-center text-sm text-faint">Aún no hay compartires en esta sala. El primero puede ser el tuyo.</p>
       ) : (
         <ul className="space-y-3">
           {posts.map((p) => (

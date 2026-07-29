@@ -42,7 +42,7 @@ export default async function Lecturas() {
               <Link href={`/lecturas/${l.id}`} className="block rounded-2xl border border-white/10 bg-dusk p-4">
                 <p className={`font-serif ${l.leida ? "text-mist" : "text-linen"}`}>{l.titulo}</p>
                 <p className="mt-1 text-xs text-faint">
-                  {l.tema}, {l.minutos} min{l.leida ? ", leida" : ""}{l.guardada ? ", guardada" : ""}
+                  {l.tema}, {l.minutos} min{l.leida ? ", leída" : ""}{l.guardada ? ", guardada" : ""}
                 </p>
               </Link>
             </li>

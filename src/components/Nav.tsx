@@ -6,6 +6,7 @@ const TABS = [
   { href: "/hoy", label: "Hoy" },
   { href: "/ruta", label: "Mi ruta" },
   { href: "/circulo", label: "Círculo" },
+  { href: "/meditar", label: "Meditar" },
   { href: "/lecturas", label: "Lecturas" },
 ];
 
@@ -20,7 +21,7 @@ export default function Nav() {
             <Link
               key={t.href}
               href={t.href}
-              className={`flex-1 py-4 text-center text-sm ${activo ? "font-bold text-lamp" : "text-faint"}`}
+              className={`flex-1 py-4 text-center text-[13px] ${activo ? "font-bold text-lamp" : "text-faint"}`}
             >
               {t.label}
             </Link>

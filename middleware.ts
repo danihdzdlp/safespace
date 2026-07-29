@@ -3,7 +3,7 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const RUTAS_PRIVADAS = ["/hoy", "/ruta", "/circulo", "/lecturas", "/cuestionario"];
+const RUTAS_PRIVADAS = ["/hoy", "/ruta", "/circulo", "/lecturas", "/meditar", "/cuestionario"];
 
 export async function middleware(request: NextRequest) {
   let respuesta = NextResponse.next({ request });

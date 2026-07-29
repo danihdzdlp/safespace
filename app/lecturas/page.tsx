@@ -16,7 +16,7 @@ export default async function Lecturas() {
   if (!perfil) redirect("/cuestionario");
 
   const [{ data: lecturas }, { data: objetivos }, { data: marcadas }] = await Promise.all([
-    supabase.from("lecturas").select("id, titulo, tema, minutos"),
+    supabase.from("lecturas").select("id, titulo, tema, minutos").neq("tema", "meditacion"),
     supabase.from("objetivos_usuaria").select("objetivo").eq("usuaria_id", user.id),
     supabase.from("lecturas_usuaria").select("lectura_id, leida, guardada").eq("usuaria_id", user.id),
   ]);
@@ -27,6 +27,7 @@ export default async function Lecturas() {
     objs.has(tema) || tema === "basicos" || tema === "meditacion" || (tema === "conexion" && objs.has("relaciones")) ? 1 : 0;
 
   const orden = (lecturas ?? [])
+    .filter((l) => l.tema !== "meditacion") // las meditaciones tienen su propia seccion
     .map((l) => ({ ...l, ...estado.get(l.id), afin: afinidad(l.tema) }))
     .sort((a, b) => Number(a.leida ?? false) - Number(b.leida ?? false) || b.afin - a.afin || a.minutos - b.minutos);
 

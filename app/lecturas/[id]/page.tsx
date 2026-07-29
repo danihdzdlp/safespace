@@ -3,6 +3,7 @@ import Link from "next/link";
 import { supabaseServer } from "@/lib/supabase/server";
 import BotonesLectura from "./BotonesLectura";
 import Nav from "@/components/Nav";
+import ReproductorMeditacion from "./ReproductorMeditacion";
 
 export const dynamic = "force-dynamic";
 
@@ -22,9 +23,12 @@ export default async function Lectura({ params }: { params: { id: string } }) {
 
   return (
     <main className="px-6 py-8">
-      <Link href="/lecturas" className="text-sm text-faint">Volver al panel</Link>
+      <Link href={lectura.tema === "meditacion" ? "/meditar" : "/lecturas"} className="text-sm text-faint">
+        {lectura.tema === "meditacion" ? "Volver a meditar" : "Volver al panel"}
+      </Link>
       <p className="mt-4 text-[11px] uppercase tracking-wide text-faint">{lectura.tema}, {lectura.minutos} min</p>
       <h1 className="mt-1 font-serif text-2xl leading-snug">{lectura.titulo}</h1>
+      {lectura.tema === "meditacion" && <ReproductorMeditacion parrafos={lectura.cuerpo as string[]} />}
       <div className="mt-5 space-y-4">
         {(lectura.cuerpo as string[]).map((p, i) => (
           <p key={i} className="text-[15px] leading-relaxed text-mist">{p}</p>

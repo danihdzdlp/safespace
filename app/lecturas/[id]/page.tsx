@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { supabaseServer } from "@/lib/supabase/server";
 import BotonesLectura from "./BotonesLectura";
+import Nav from "@/components/Nav";
 
 export const dynamic = "force-dynamic";
 
@@ -30,6 +31,9 @@ export default async function Lectura({ params }: { params: { id: string } }) {
         ))}
       </div>
       <BotonesLectura lecturaId={lectura.id} leida={marca?.leida ?? false} guardada={marca?.guardada ?? false} />
+      {/* Menu inferior tambien aqui. Hallazgo de uso real, la pantalla de
+          lectura dejaba a la usuaria sin regreso directo a su ruta */}
+      <Nav />
     </main>
   );
 }

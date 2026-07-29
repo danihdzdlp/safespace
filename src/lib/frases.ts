@@ -1,5 +1,5 @@
 // ============================================================
-// Afirmacion de la hora. Cambia cada hora en punto, hora del
+// Afirmacion del momento. Cambia cada media hora, hora del
 // centro de Mexico, y es la misma para todas las personas en
 // esa hora, deterministica y probada en tests/frases.test.ts.
 // Tono cuidado, acompanan sin exigir ni prometer de mas.
@@ -34,6 +34,9 @@ export const AFIRMACIONES = [
 ];
 
 export function fraseDeLaHora(instante: Date = new Date()): string {
-  const { h, diaDelMes } = horaEnMexico(instante);
-  return AFIRMACIONES[(diaDelMes * 24 + h) % AFIRMACIONES.length];
+  // Un bloque nuevo cada media hora en punto, hora del centro de Mexico,
+  // el mismo recordatorio para todas las personas dentro de ese bloque.
+  const { h, m, diaDelMes } = horaEnMexico(instante);
+  const bloque = diaDelMes * 48 + h * 2 + (m >= 30 ? 1 : 0);
+  return AFIRMACIONES[bloque % AFIRMACIONES.length];
 }

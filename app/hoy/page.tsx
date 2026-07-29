@@ -55,9 +55,10 @@ export default async function Hoy() {
     <main>
       <Encabezado seudonimo={perfil.seudonimo} racha={perfil.racha} />
       <section className="space-y-4 px-5 pt-2">
-        <p className="rounded-2xl border border-white/10 bg-dusk px-4 py-3 text-center font-serif text-[15px] italic leading-relaxed text-mist">
-          {frase}
-        </p>
+        <div className="rounded-2xl border border-white/10 bg-dusk px-4 py-3">
+          <p className="text-center text-[10px] tracking-widest text-faint">UN RECORDATORIO PARA TI</p>
+          <p className="mt-1 text-center font-serif text-[15px] italic leading-relaxed text-mist">{frase}</p>
+        </div>
         {(totalCompletadas ?? 0) === 0 && (
           <div className="rounded-2xl border border-lamp/40 bg-lamp/10 p-4">
             <p className="text-sm font-bold text-lamp">Recibiste una semilla</p>

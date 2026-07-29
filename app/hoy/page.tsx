@@ -74,9 +74,11 @@ export default async function Hoy() {
           href="/circulo"
           className={`block rounded-2xl border p-4 ${foro.abierto ? "border-lamp/50 bg-lamp/10" : "border-white/10 bg-dusk"}`}
         >
-          <p className="text-sm font-bold">{foro.abierto ? "El círculo está encendido" : "El círculo abre a las 8:00 pm"}</p>
+          <p className="text-sm font-bold">
+            {foro.abierto ? "El círculo está encendido" : `El círculo abre en ${formatoRestante(foro.restanteSeg)}`}
+          </p>
           <p className="text-xs text-faint">
-            {foro.abierto ? `Cierra en ${formatoRestante(foro.restanteSeg)}` : `Todos los días de 8:00 a 9:30 pm`}
+            {foro.abierto ? `Cierra en ${formatoRestante(foro.restanteSeg)}` : "Dos sesiones al día, de 3:00 a 5:00 y de 8:00 a 10:00 pm"}
           </p>
         </Link>
         <Link href="/lecturas" className="block rounded-2xl border border-white/10 bg-dusk p-4">

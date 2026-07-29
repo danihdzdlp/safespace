@@ -8,8 +8,12 @@
 // ============================================================
 
 export const ZONA_OFICIAL = "America/Mexico_City";
-export const APERTURA_MIN = 20 * 60; // 20:00
-export const CIERRE_MIN = 21 * 60 + 30; // 21:30
+// Dos sesiones diarias. Se amplio de una sola sesion por retroalimentacion
+// de las primeras usuarias, al ser escrito, mas ventanas dan mas oportunidad.
+export const VENTANAS = [
+  { apertura: 15 * 60, cierre: 17 * 60 }, // 3:00 a 5:00 pm
+  { apertura: 20 * 60, cierre: 22 * 60 }, // 8:00 a 10:00 pm
+] as const;
 
 export interface EstadoForo {
   abierto: boolean;
@@ -52,16 +56,21 @@ export function fechaOficial(instante: Date = new Date()): string {
 export function estadoDelForo(instante: Date = new Date()): EstadoForo {
   const { h, m, s, diaDelMes, mes } = horaEnMexico(instante);
   const seg = h * 3600 + m * 60 + s;
-  const apertura = APERTURA_MIN * 60;
-  const cierre = CIERRE_MIN * 60;
-  const abierto = seg >= apertura && seg < cierre;
-  const restanteSeg = abierto
-    ? cierre - seg
-    : seg < apertura
-      ? apertura - seg
-      : 86400 - seg + apertura;
   const temaDelDia = TEMAS_DIA[(diaDelMes + mes) % TEMAS_DIA.length];
-  return { abierto, restanteSeg, temaDelDia };
+
+  // Dentro de alguna sesion, el restante corre hacia su cierre
+  for (const v of VENTANAS) {
+    const apertura = v.apertura * 60;
+    const cierre = v.cierre * 60;
+    if (seg >= apertura && seg < cierre) {
+      return { abierto: true, restanteSeg: cierre - seg, temaDelDia };
+    }
+  }
+
+  // Cerrado, el restante corre hacia la proxima apertura de hoy o de manana
+  const proxima = VENTANAS.map((v) => v.apertura * 60).find((a) => a > seg);
+  const restanteSeg = proxima != null ? proxima - seg : 86400 - seg + VENTANAS[0].apertura * 60;
+  return { abierto: false, restanteSeg, temaDelDia };
 }
 
 export function formatoRestante(seg: number): string {

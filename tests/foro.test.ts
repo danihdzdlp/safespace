@@ -9,26 +9,33 @@ import { estadoDelForo, fechaOficial, formatoRestante, horaEnMexico } from "../s
 const cdmx = (h: number, m: number, s: number) => new Date(Date.UTC(2026, 6, 27, h + 6, m, s));
 
 describe("estadoDelForo", () => {
-  it("esta cerrado justo antes de la apertura", () => {
-    const e = estadoDelForo(cdmx(19, 59, 59));
+  it("cerrado justo antes de la sesion de la tarde", () => {
+    const e = estadoDelForo(cdmx(14, 59, 59));
     expect(e.abierto).toBe(false);
     expect(e.restanteSeg).toBe(1);
+  });
+  it("abre exactamente a las 15:00:00", () => {
+    expect(estadoDelForo(cdmx(15, 0, 0)).abierto).toBe(true);
+  });
+  it("sigue abierto a las 16:59:59 y cierra a las 17:00:00", () => {
+    expect(estadoDelForo(cdmx(16, 59, 59)).abierto).toBe(true);
+    expect(estadoDelForo(cdmx(17, 0, 0)).abierto).toBe(false);
+  });
+  it("entre sesiones, el restante corre hacia las 20:00", () => {
+    const e = estadoDelForo(cdmx(17, 0, 0));
+    expect(e.restanteSeg).toBe(3 * 3600);
   });
   it("abre exactamente a las 20:00:00", () => {
     expect(estadoDelForo(cdmx(20, 0, 0)).abierto).toBe(true);
   });
-  it("sigue abierto a las 21:29:59", () => {
-    const e = estadoDelForo(cdmx(21, 29, 59));
-    expect(e.abierto).toBe(true);
-    expect(e.restanteSeg).toBe(1);
+  it("sigue abierto a las 21:59:59 y cierra a las 22:00:00", () => {
+    expect(estadoDelForo(cdmx(21, 59, 59)).abierto).toBe(true);
+    expect(estadoDelForo(cdmx(22, 0, 0)).abierto).toBe(false);
   });
-  it("cierra exactamente a las 21:30:00", () => {
-    expect(estadoDelForo(cdmx(21, 30, 0)).abierto).toBe(false);
-  });
-  it("cerrado despues del cierre, la proxima apertura es manana", () => {
-    const e = estadoDelForo(cdmx(22, 0, 0));
+  it("despues del ultimo cierre, la proxima apertura es manana a las 15:00", () => {
+    const e = estadoDelForo(cdmx(23, 0, 0));
     expect(e.abierto).toBe(false);
-    expect(e.restanteSeg).toBe(22 * 3600); // de 22:00 a 20:00 del dia siguiente
+    expect(e.restanteSeg).toBe(16 * 3600);
   });
   it("siempre entrega un tema del dia", () => {
     expect(estadoDelForo(cdmx(12, 0, 0)).temaDelDia.length).toBeGreaterThan(3);

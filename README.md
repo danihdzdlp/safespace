@@ -1,6 +1,6 @@
 # SafeSpace
 
-Un lugar para no cargar sola lo que sientes. Aplicación web de apoyo emocional entre pares para personas jóvenes en México, con círculos de escucha en horario fijo, un path diario de tareas pequeñas con guías, un árbol personal que crece con la constancia bajo un paisaje que refleja el ánimo del día, un recordatorio personal que cambia cada media hora, un panel de lecturas con guías de meditación y un botón de emergencia siempre visible.
+Un lugar para no cargar sola lo que sientes. Aplicación web de apoyo emocional entre pares para personas jóvenes en México, con círculos de escucha en dos sesiones diarias, un path diario de tareas pequeñas con guías, un árbol personal que crece con la constancia bajo un paisaje que refleja el ánimo del día, un recordatorio personal que cambia cada media hora, un panel de lecturas con guías de meditación y un botón de emergencia siempre visible.
 
 Proyecto final del curso, segunda parte. La primera parte es el documento de definición y planeación que vive en `docs/`.
 
@@ -16,7 +16,7 @@ Proyecto final del curso, segunda parte. La primera parte es el documento de def
 | Supabase | Autenticación, base de datos Postgres y políticas de seguridad a nivel de fila (RLS) |
 | Tailwind CSS | Estilos con la paleta nocturna definida en la fase de planeación |
 | Zod | Validación estricta de toda entrada de datos en el servidor |
-| Vitest | Pruebas automatizadas de la lógica central, 32 pruebas |
+| Vitest | Pruebas automatizadas de la lógica central, 36 pruebas |
 | GitHub y GitHub Actions | Control de versiones y verificación de calidad en cada push, tipos, lint y pruebas |
 | Vercel | Hosting con despliegue automático desde main y entornos de preview por rama |
 | Claude Code | Copiloto de desarrollo, con revisión manual de cada cambio |
@@ -42,7 +42,7 @@ En Vercel se configuran en Settings, Environment Variables. La `service_role` ke
 
 ## Decisiones de arquitectura
 
-**La ventana horaria vive en el servidor.** El foro abre de 8:00 a 9:30 pm hora del centro de México, todos los días. El estado no se guarda en la base, se deriva del reloj del servidor contra la zona `America/Mexico_City` en `src/lib/foro.ts`. El reloj del dispositivo solo pinta la cuenta regresiva, porque es un dato que la usuaria controla y no puede ser fuente de verdad.
+**La ventana horaria vive en el servidor.** El foro abre en dos sesiones diarias, de 3:00 a 5:00 y de 8:00 a 10:00 pm hora del centro de México. Originalmente era una sola sesión de 8:00 a 9:30, se amplió por retroalimentación de las primeras usuarias, al ser un espacio escrito, más ventanas dan más oportunidades de conexión. El estado no se guarda en la base, se deriva del reloj del servidor contra la zona `America/Mexico_City` en `src/lib/foro.ts`. El reloj del dispositivo solo pinta la cuenta regresiva, porque es un dato que la usuaria controla y no puede ser fuente de verdad.
 
 **Idempotencia por diseño de base de datos.** El path del día tiene la restricción `UNIQUE(usuaria_id, fecha)`. Recargar la página o dos peticiones simultáneas jamás generan dos paths distintos, la base lo garantiza, no el código.
 
@@ -84,7 +84,7 @@ Errores reales que la IA produjo durante este desarrollo y que el proceso de ver
 
 ## Calidad antes de desplegar
 
-Cada push a main corre en GitHub Actions la verificación de tipos, el lint y las 32 pruebas. Vercel despliega automáticamente main a producción y cada rama a un entorno de preview, de modo que ningún cambio llega a la usuaria sin pasar las tres puertas.
+Cada push a main corre en GitHub Actions la verificación de tipos, el lint y las 36 pruebas. Vercel despliega automáticamente main a producción y cada rama a un entorno de preview, de modo que ningún cambio llega a la usuaria sin pasar las tres puertas.
 
 ## Autoevaluación
 

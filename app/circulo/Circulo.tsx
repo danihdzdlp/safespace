@@ -22,7 +22,7 @@ export default function Circulo({ salas, estadoInicial }: { salas: { id: string;
     const t = setInterval(() => {
       setEstado((e) => {
         const restante = Math.max(e.restanteSeg - 1, 0);
-        return restante === 0 ? { ...e, abierto: !e.abierto, restanteSeg: e.abierto ? 0 : 90 * 60 } : { ...e, restanteSeg: restante };
+        return restante === 0 ? { ...e, abierto: !e.abierto, restanteSeg: e.abierto ? 3 * 3600 : 2 * 3600 } : { ...e, restanteSeg: restante };
       });
     }, 1000);
     return () => clearInterval(t);
@@ -71,7 +71,7 @@ export default function Circulo({ salas, estadoInicial }: { salas: { id: string;
       <div className={`rounded-2xl border p-4 ${estado.abierto ? "border-lamp/50 bg-lamp/10" : "border-white/10 bg-dusk"}`}>
         <p className="text-sm font-bold">{estado.abierto ? "Sesión en curso" : "Sesión cerrada"}</p>
         <p className="text-xs text-faint">
-          {estado.abierto ? `Cierra en ${formatoRestante(estado.restanteSeg)}` : `Abre en ${formatoRestante(estado.restanteSeg)}, todos los días de 8:00 a 9:30 pm`}
+          {estado.abierto ? `Cierra en ${formatoRestante(estado.restanteSeg)}` : `Abre en ${formatoRestante(estado.restanteSeg)}, sesiones de 3:00 a 5:00 y de 8:00 a 10:00 pm`}
         </p>
         <div className="mt-3 rounded-xl bg-night p-3">
           <p className="text-[10px] tracking-wide text-faint">TEMA DE HOY, PROPUESTO POR MODERACIÓN</p>

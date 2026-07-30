@@ -1,10 +1,12 @@
 # SafeSpace
 
+**Proyecto final de Daniela Hernandez De la Peña**
+
 Un lugar para no cargar en soledad lo que sientes. Aplicación web de apoyo emocional entre pares para personas jóvenes en México, con círculos de escucha en dos sesiones diarias, un path diario de tareas pequeñas con guías, un árbol personal que crece con la constancia bajo un paisaje que refleja el ánimo del día, un recordatorio personal que cambia cada media hora, un panel de lecturas, una sección de meditación guiada por voz y un botón de emergencia siempre visible.
 
 Proyecto final del curso, segunda parte. La primera parte es el documento de definición y planeación que vive en `docs/`.
 
-- App desplegada: PENDIENTE, pega aquí tu dominio de Vercel
+- App desplegada: https://safespace-wheat.vercel.app
 - Documento de planeación: `docs/SafeSpace_Documento_Definicion_Proyecto.pdf`
 
 ## Stack y función de cada herramienta
@@ -60,6 +62,26 @@ En Vercel se configuran en Settings, Environment Variables. La `service_role` ke
 
 ## Prompts principales usados con la IA
 
+Los prompts de este proyecto no fueron peticiones sueltas, siguieron un método consistente de seis técnicas de ingeniería de prompts:
+
+**1. Contexto como fuente de verdad.** Cada prompt partía del documento de planeación, no de la memoria, por ejemplo, lee el documento de planeación de SafeSpace y construye a partir de él. Así la IA trabajaba sobre las decisiones ya tomadas, no inventando alcance.
+
+**2. Restricciones explícitas dentro del prompt.** Nunca se pidió haz un foro, se fijaron las reglas no negociables en la petición misma, la validación de la ventana vive solo en el servidor, la zona horaria oficial es America/Mexico_City, el reloj del cliente solo pinta.
+
+**3. Criterio de aceptación verificable.** Los prompts de lógica pedían el código junto con sus pruebas y los valores exactos que deben pasar, escribe pruebas para los límites 19:59:59, 20:00:00, 21:29:59 y 21:30:00. El prompt define desde el inicio cómo se sabrá que quedó bien.
+
+**4. Alcance pequeño e iterativo.** Un módulo o una función por prompt, nunca hazme la app completa, con un commit por cada cambio con propósito. Eso mantiene el control y hace revisable cada resultado.
+
+**5. Corrección con evidencia, no con quejas.** Cuando la IA se equivocó, el prompt de corrección incluía la prueba o el error exacto que lo demostraba, la prueba de no repetición falló porque el motor descarta las tareas recientes en bloque, corrígelo penalizándolas en el puntaje para que solo entren cuando no alcancen las nuevas.
+
+**6. Explicación antes de aceptación.** A la IA se le pidió explicar qué hace cada cambio y por qué antes de integrarlo, y los archivos sensibles, autenticación, RLS y emergencia, se revisaron línea por línea. Estas reglas quedaron escritas en `CLAUDE.md` para que la IA las respetara en cada sesión.
+
+### Anatomía de un prompt del proyecto
+
+Tomando el prompt de la ventana horaria como ejemplo, sus cuatro partes son, contexto, implementa estadoDelForo como función pura, restricción, que derive el estado de la ventana usando la zona America/Mexico_City con Intl, sin guardar estado, tarea, para las dos sesiones del día, y criterio de aceptación, y escribe pruebas para los límites exactos de apertura y cierre. Un prompt así no deja a la IA adivinar ni el qué, ni el cómo, ni el cuándo está terminado.
+
+### Los prompts principales
+
 1. "Lee el documento de planeación de SafeSpace y construye el esquema SQL de Supabase con RLS en todas las tablas de datos personales, incluyendo la restricción UNIQUE(usuaria_id, fecha) para la idempotencia del path"
 2. "Implementa estadoDelForo como función pura que derive el estado de la ventana 20:00 a 21:30 usando la zona America/Mexico_City con Intl, sin guardar estado, y escribe pruebas para los límites exactos 19:59:59, 20:00:00, 21:29:59 y 21:30:00"
 3. "Escribe la server action publicarMensaje con las cuatro validaciones del documento en este orden, ventana horaria en servidor, contenido con Zod entre 1 y 2000 caracteres, límite de 5 mensajes por minuto, y evaluación de riesgo que marca sin bloquear"
@@ -82,6 +104,34 @@ Errores reales que la IA produjo durante este desarrollo y que el proceso de ver
 4. **Tipos implícitos `any` en los manejadores de cookies de Supabase.** El modo estricto de TypeScript los rechazó y se tiparon con `CookieOptions` de `@supabase/ssr`. Es el tipo de detalle que la IA omite y que en producción esconde errores.
 5. **Textos generados sin ortografía española completa.** La IA escribió la interfaz sin acentos, eñes ni signos de interrogación de apertura, siguiendo una convención de programación que no aplica a los textos visibles. Se detectó probando la app en producción y se corrigió en un cambio dedicado, cuidando que las opciones del cuestionario y el motor del perfil siguieran coincidiendo, con las pruebas como red de seguridad.
 6. **Riesgo permanente de APIs inventadas.** Con bibliotecas que cambian rápido, como `@supabase/ssr`, la IA puede sugerir métodos de versiones viejas o inexistentes. Mitigación de proceso, todo cambio pasa por typecheck, lint y pruebas en local y de nuevo en GitHub Actions antes de llegar a Vercel, y los archivos sensibles, autenticación, RLS y emergencia, se revisan línea por línea como marca `CLAUDE.md`.
+
+## AI log, bitácora cronológica del uso de la IA
+
+Registro del trabajo con la IA (Claude, de Anthropic) durante el proyecto. Cada entrada indica qué se le pidió, qué produjo, y la verificación y decisión humana correspondiente. El proceso de control fue constante, ningún resultado de la IA llegó a producción sin pasar por revisión, verificación de tipos, lint, pruebas automatizadas y build, en local y de nuevo en GitHub Actions.
+
+**27 de julio, planeación.** Se pidió a la IA estructurar el documento de definición conforme a las cinco secciones obligatorias, con pseudocódigo, diagramas y análisis de alternativas. Decisión humana: el alcance del producto, las cinco funciones, el horario del círculo, las exclusiones explícitas y el plan de recorte.
+
+**28 de julio, esquema de datos.** Prompt: construir el esquema de Supabase con RLS en todas las tablas personales y la restricción UNIQUE(usuaria_id, fecha) para la idempotencia del path. La IA entregó el esquema con 13 tablas, políticas y datos semilla. Verificación humana: ejecución en el SQL Editor y confirmación de éxito.
+
+**28 de julio, lógica central y primer error de la IA.** Prompt: motor del path con no repetición de 14 días y regla compasiva. La primera versión de la IA descartaba las tareas recientes en bloque y podía repetir teniendo alternativas. Una prueba automatizada falló y lo evidenció. Se corrigió penalizando lo reciente en el puntaje. Lección registrada: sin la prueba, el error llegaba a producción.
+
+**28 de julio, segundo y tercer error de la IA.** La IA colocó lógica de servidor en la página estática de emergencia, detectado al correr el build antes de desplegar, y usó un alias de importación inexistente en 8 archivos, detectado por la verificación de tipos. Ambos corregidos antes de publicar.
+
+**28 de julio, despliegue por etapas.** Trabajo humano directo: creación de las cuentas de GitHub, Supabase y Vercel, subida del proyecto en etapas con commits descriptivos, configuración de variables de entorno seguras, y verificación del primer pipeline verde de GitHub Actions.
+
+**28 de julio, hallazgos de pruebas con usuarias reales.** Probando la app en producción se detectó que el campo del seudónimo pasaba desapercibido y bloqueaba el cuestionario, y que el distintivo de la racha cerraba la sesión al tocarlo. Se pidieron a la IA las correcciones y se verificaron en vivo.
+
+**28 de julio, ortografía.** Cuarto error de la IA: generó los textos de la interfaz sin acentos ni eñes. Se pidió la corrección completa cuidando la correspondencia entre las opciones del cuestionario y el motor del perfil, con las pruebas como red de seguridad, y un script SQL para los contenidos en base de datos.
+
+**28 y 29 de julio, evolución del producto por retroalimentación.** Decisiones de producto humanas implementadas con la IA: guías paso a paso en las 25 tareas, la semilla y el árbol que crece derivado de las tareas completadas, el paisaje que refleja el ánimo del día, el recordatorio que cambia cada media hora, y la ampliación del círculo a dos sesiones diarias, con pruebas de los límites exactos de ambas ventanas.
+
+**29 de julio, sección Meditar.** Decisión de producto humana: separar la meditación en su propia sección del menú. Durante la integración, la IA detectó y eliminó una carpeta duplicada de un intento previo que apuntaba a una ruta inexistente.
+
+**29 y 30 de julio, biblioteca de audios con voz humana.** Trabajo humano: grabación de los 10 audios con voz propia. Trabajo de la IA: conversión a mp3, limpieza de graves y normalización de volumen, e identificación de cada archivo por su duración. Verificación humana: subida a Supabase Storage, corrección de la estructura de carpetas del bucket y prueba de reproducción en la app.
+
+**30 de julio, inclusión y pulido final.** Observación humana: el cuestionario asumía género. La IA reescribió preguntas, opciones y lema en lenguaje neutro, sincronizado con el motor del perfil y verificado por pruebas. Se agregaron la página de bienvenida pública, la gráfica de evolución del ánimo y la instalación como app, y el documento de planeación se actualizó a la versión 2.0 con el anexo de evolución del producto.
+
+**Resultado del proceso.** 36 pruebas automatizadas, integración continua en cada cambio, seis errores de la IA documentados con su mitigación, cuatro hallazgos de usuarias reales corregidos, y una regla sostenida de principio a fin, la IA acelera, el control de calidad es humano y automatizado.
 
 ## Calidad antes de desplegar
 

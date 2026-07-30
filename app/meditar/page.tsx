@@ -5,6 +5,8 @@ import Link from "next/link";
 import { supabaseServer } from "@/lib/supabase/server";
 import Nav from "@/components/Nav";
 import Encabezado from "@/components/Encabezado";
+import ReproductorAudio from "./ReproductorAudio";
+import { AUDIOS, BASE_AUDIOS } from "@/lib/audios";
 
 export const dynamic = "force-dynamic";
 
@@ -30,6 +32,18 @@ export default async function Meditar() {
           Un momento para bajar el ritmo. Elige una guía, ponte cómoda, y si quieres,
           deja que la voz te acompañe paso a paso.
         </p>
+        <p className="pt-2 text-xs tracking-widest text-faint">CON LA VOZ DE SAFESPACE</p>
+        <ul className="space-y-3">
+          {AUDIOS.map((a) => (
+            <li key={a.archivo} className="rounded-2xl border border-white/10 bg-dusk p-4">
+              <p className="font-serif text-linen">{a.titulo}</p>
+              <p className="mt-1 text-xs text-faint">{a.duracion} min, voz humana</p>
+              <ReproductorAudio src={`${BASE_AUDIOS}/${a.archivo}`} />
+            </li>
+          ))}
+        </ul>
+
+        <p className="pt-3 text-xs tracking-widest text-faint">GUÍAS PARA LEER O ESCUCHAR CON LA VOZ DEL DISPOSITIVO</p>
         <ul className="space-y-3">
           {(meditaciones ?? []).map((m) => (
             <li key={m.id}>

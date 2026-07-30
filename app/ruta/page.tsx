@@ -6,6 +6,7 @@ import Nav from "@/components/Nav";
 import Encabezado from "@/components/Encabezado";
 import AnimoDelDia from "./AnimoDelDia";
 import Arbol from "@/components/Arbol";
+import GraficaAnimo from "./GraficaAnimo";
 import { etapaDelArbol } from "@/lib/arbol";
 
 export const dynamic = "force-dynamic";
@@ -19,7 +20,8 @@ export default async function Ruta() {
 
   const hoy = fechaOficial();
   const hace7 = fechaOficial(new Date(Date.now() - 6 * 86400000));
-  const [{ data: asignaciones }, { data: animoHoy }, { count: totalCompletadas }] = await Promise.all([
+  const hace14 = fechaOficial(new Date(Date.now() - 13 * 86400000));
+  const [{ data: asignaciones }, { data: animoHoy }, { count: totalCompletadas }, { data: animos }] = await Promise.all([
     supabase
       .from("asignaciones")
       .select("fecha, asignacion_tareas(completada)")
@@ -27,7 +29,13 @@ export default async function Ruta() {
       .gte("fecha", hace7),
     supabase.from("animo_diario").select("valor").eq("usuaria_id", user.id).eq("fecha", hoy).maybeSingle(),
     supabase.from("asignacion_tareas").select("id", { count: "exact", head: true }).eq("completada", true),
+    supabase.from("animo_diario").select("fecha, valor").eq("usuaria_id", user.id).gte("fecha", hace14),
   ]);
+  const animoPorDia = new Map((animos ?? []).map((a) => [a.fecha as string, a.valor as number]));
+  const puntosAnimo = Array.from({ length: 14 }, (_, i) => {
+    const clave = fechaOficial(new Date(Date.now() - (13 - i) * 86400000));
+    return { dia: clave, valor: animoPorDia.get(clave) ?? null };
+  });
   const arbol = etapaDelArbol(totalCompletadas ?? 0);
 
   const porFecha = new Map<string, { total: number; hechas: number }>();
@@ -98,6 +106,11 @@ export default async function Ruta() {
         </div>
 
         <AnimoDelDia inicial={animoHoy?.valor ?? null} base={perfil.animo_base ?? 3} />
+
+        <div className="rounded-2xl border border-white/10 bg-dusk p-4">
+          <p className="mb-3 text-xs tracking-wide text-faint">TU ÁNIMO, ÚLTIMAS DOS SEMANAS</p>
+          <GraficaAnimo puntos={puntosAnimo} />
+        </div>
 
         <div className="rounded-2xl border border-white/10 bg-dusk p-4">
           <p className="mb-2 text-xs tracking-wide text-faint">PRÓXIMAS ETAPAS</p>

@@ -33,7 +33,7 @@ export default function Entrar() {
   return (
     <main className="flex min-h-dvh flex-col justify-center gap-4 px-6">
       <p className="text-xs font-bold tracking-widest text-lamp">SAFESPACE</p>
-      <h1 className="font-serif text-3xl leading-tight">Un lugar para no cargar sola lo que sientes.</h1>
+      <h1 className="font-serif text-3xl leading-tight">Un lugar para no cargar en soledad lo que sientes.</h1>
       <p className="text-sm text-mist">Entras con seudónimo, nadie sabe quién eres.</p>
 
       <div className="mt-2 flex gap-2">

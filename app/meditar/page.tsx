@@ -29,7 +29,7 @@ export default async function Meditar() {
       <section className="space-y-3 px-5 pt-2">
         <h1 className="font-serif text-2xl">Meditar</h1>
         <p className="text-sm leading-relaxed text-mist">
-          Un momento para bajar el ritmo. Elige una guía, ponte cómoda, y si quieres,
+          Un momento para bajar el ritmo. Elige una guía, busca una postura cómoda, y si quieres,
           deja que la voz te acompañe paso a paso.
         </p>
         <p className="pt-2 text-xs tracking-widest text-faint">CON LA VOZ DE SAFESPACE</p>

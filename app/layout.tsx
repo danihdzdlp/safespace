@@ -4,7 +4,9 @@ import BotonEmergencia from "@/components/BotonEmergencia";
 
 export const metadata: Metadata = {
   title: "SafeSpace",
-  description: "Un lugar para no cargar sola lo que sientes. Apoyo emocional entre pares.",
+  description: "Un lugar para no cargar en soledad lo que sientes. Apoyo emocional entre pares.",
+  icons: { icon: "/icon-192.png", apple: "/apple-touch-icon.png" },
+  appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "SafeSpace" },
 };
 export const viewport: Viewport = { themeColor: "#12202F" };
 

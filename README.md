@@ -1,6 +1,6 @@
 # SafeSpace
 
-Un lugar para no cargar sola lo que sientes. Aplicación web de apoyo emocional entre pares para personas jóvenes en México, con círculos de escucha en dos sesiones diarias, un path diario de tareas pequeñas con guías, un árbol personal que crece con la constancia bajo un paisaje que refleja el ánimo del día, un recordatorio personal que cambia cada media hora, un panel de lecturas, una sección de meditación guiada por voz y un botón de emergencia siempre visible.
+Un lugar para no cargar en soledad lo que sientes. Aplicación web de apoyo emocional entre pares para personas jóvenes en México, con círculos de escucha en dos sesiones diarias, un path diario de tareas pequeñas con guías, un árbol personal que crece con la constancia bajo un paisaje que refleja el ánimo del día, un recordatorio personal que cambia cada media hora, un panel de lecturas, una sección de meditación guiada por voz y un botón de emergencia siempre visible.
 
 Proyecto final del curso, segunda parte. La primera parte es el documento de definición y planeación que vive en `docs/`.
 
@@ -69,7 +69,8 @@ En Vercel se configuran en Settings, Environment Variables. La `service_role` ke
 7. "Agrega a cada tarea del catálogo una guía breve de cómo hacerla, visible con un botón propio separado del de completar, y una tarea nueva de caminata consciente de 30 minutos con su guía de meditación caminando"
 8. "Agrega un árbol personal que crezca por etapas derivadas del total de tareas completadas, sin guardar estado propio, con la bienvenida de la semilla en la primera visita, y una afirmación que cambie cada media hora de forma determinista con la hora del centro de México"
 9. "Dibuja detrás del árbol un paisaje que cambie con el ánimo registrado del día, lluvia, nublado, claros, medio sol o sol pleno, y suaviza la paleta azul a tonos pizarra de baja saturación cómodos para lectura nocturna"
-10. "Corrige la ortografía de todos los textos de la interfaz, acentos, eñes y signos de interrogación de apertura, sin romper la correspondencia entre las opciones del cuestionario y el motor del perfil"
+10. "Haz el cuestionario y los textos de la interfaz neutros en género, y agrega una página de bienvenida pública, una gráfica de la evolución del ánimo y la instalación como app en el teléfono"
+11. "Corrige la ortografía de todos los textos de la interfaz, acentos, eñes y signos de interrogación de apertura, sin romper la correspondencia entre las opciones del cuestionario y el motor del perfil"
 
 ## Limitaciones y alucinaciones de la IA detectadas y cómo se mitigaron
 

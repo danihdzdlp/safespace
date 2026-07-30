@@ -63,7 +63,7 @@ export default function ReproductorMeditacion({ parrafos }: { parrafos: string[]
     <div className="mt-5 rounded-2xl border border-lamp/40 bg-lamp/10 p-4">
       <p className="text-sm font-bold text-lamp">Meditación guiada con voz</p>
       <p className="mt-1 text-xs leading-relaxed text-mist">
-        Ponte cómoda, usa audífonos si puedes, y deja que la voz te lleve paso a paso.
+        Busca una postura cómoda, usa audífonos si puedes, y deja que la voz te lleve paso a paso.
         Es la voz de tu dispositivo, respira con su ritmo.
       </p>
       <div className="mt-3 flex items-center gap-3">
